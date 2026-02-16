@@ -196,3 +196,12 @@ void WifiPortal::loop() {
         dns_.processNextRequest();
     }
 }
+
+void WifiPortal::factoryResetWifi() {
+    Preferences p;
+    p.begin(cfg_.nvsNamespace, false);
+    p.clear();
+    p.end();
+
+    Serial.println("WifiPortal: WiFi credentials cleared for factor reset.");
+}

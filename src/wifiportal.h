@@ -8,6 +8,8 @@
 
 class WifiPortal {
 public:
+    void factoryResetWifi(); // Clears SSID/password from NVS
+
     struct Config {
         const char* hostname = "esp32-solar";
 

@@ -1,6 +1,7 @@
 // Solar Sensor ID 28165E6E00000045
 
 #include "wifiportal.h"
+#include "bootmode.h"
 
 #include <Arduino.h>
 #include <OneWire.h>
@@ -68,6 +69,7 @@ int main() {
   return 0;
 }
 
+BootMode bootMode;
 WifiPortal::Config portalCfg;
 WifiPortal portal(portalCfg);
 
@@ -82,7 +84,15 @@ void setup() {
 
   Serial.println("Starting sensors...");
   sensors.begin();
- 
+
+  BootMode::Action action = bootMode.begin();
+  if (action == BootMode::Action::FactoryReset) {
+    portal.factoryResetWifi();
+    bootMode.resetWindow();
+    delay(300);
+    ESP.restart();
+  }
+
   // Start wifi if possible (STA if possible, else AP).
   WifiPortal::Mode mode = portal.begin();
 
@@ -123,4 +133,5 @@ void setup() {
 
 void loop() {
   portal.loop();
+  bootMode.loop();
 }
